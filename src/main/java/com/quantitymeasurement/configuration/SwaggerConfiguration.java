@@ -25,7 +25,7 @@ public class SwaggerConfiguration {
                                                       .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
                                                       .paths(regex("/quantity-measurement.*"))
                                                       .build()
-                .apiInfo(metaInfo());
+                                                      .apiInfo(metaInfo());
     }
 
     private ApiInfo metaInfo() {

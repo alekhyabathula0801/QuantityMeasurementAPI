@@ -19,18 +19,18 @@ public class QuantityMeasurementController {
 
     @ApiResponses(value = {@ApiResponse(code = 400,message = "Bad Request")})
 
-    @GetMapping("/quantity-measurement/{unitIn}/{value}/{unitOut}")
-    public QuantityMeasurement getConvertedValue(@PathVariable("unitIn") String unitIn,@PathVariable("value") Double value,
-                                                 @PathVariable("unitOut") String unitOut) {
+    @GetMapping("/quantity-measurement/{unit}/{value}/{requiredUnit}")
+    public QuantityMeasurement getConvertedValue(@PathVariable("unit") String unit, @PathVariable("value") Double value,
+                                                 @PathVariable("requiredUnit") String requiredUnit) {
         try {
             return new QuantityMeasurement(quantityMeasurementService.convertTo(new QuantityMeasurement(
-                                                                                value,Unit.valueOf(unitIn.toUpperCase())),
-                                                                                Unit.valueOf(unitOut.toUpperCase())),
-                                           Unit.valueOf(unitOut.toUpperCase()));
+                                                                                value,Unit.valueOf(unit.toUpperCase())),
+                                                                                Unit.valueOf(requiredUnit.toUpperCase())),
+                                           Unit.valueOf(requiredUnit.toUpperCase()));
         } catch (IllegalArgumentException e) {
             throw new QuantityMeasurementException("Invalid Unit");
         } catch (QuantityMeasurementException e) {
-            throw new QuantityMeasurementException(unitOut.toUpperCase() + " cann't convert to "+ unitIn.toUpperCase());
+            throw new QuantityMeasurementException(requiredUnit.toUpperCase() + " cannot convert to "+ unit.toUpperCase());
         }
     }
 

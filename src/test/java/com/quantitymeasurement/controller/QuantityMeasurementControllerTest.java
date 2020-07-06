@@ -57,7 +57,8 @@ public class QuantityMeasurementControllerTest {
             RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/quantity-measurement/millimetre/1000/METRE")
                                                                   .accept(MediaType.APPLICATION_JSON)
                                                                   .contentType(MediaType.APPLICATION_JSON);
-            MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+            MvcResult result = mockMvc.perform(requestBuilder)
+                                      .andReturn();
             assertEquals("fail",HttpStatus.OK.value(),result.getResponse().getStatus());
             JSONAssert.assertEquals(gson.toJson(new QuantityMeasurement(1.0,METRE)),result.getResponse().getContentAsString(),false);
         } catch (Exception e) {
@@ -72,7 +73,8 @@ public class QuantityMeasurementControllerTest {
             RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/quantity-measurement/metr/1/metre")
                                                                   .accept(MediaType.APPLICATION_JSON)
                                                                   .contentType(MediaType.APPLICATION_JSON);
-            mockMvc.perform(requestBuilder).andExpect(MockMvcResultMatchers.status().isBadRequest());
+            mockMvc.perform(requestBuilder)
+                   .andExpect(MockMvcResultMatchers.status().isBadRequest());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -82,7 +84,7 @@ public class QuantityMeasurementControllerTest {
     void given1000MillilitreToConvert_whenConvertedToInvalidUnitLitre_shouldReturnResults() {
         try {
             when(quantityMeasurementService.convertTo(any(QuantityMeasurement.class), any()))
-                 .thenThrow(new QuantityMeasurementException("Invalid conversion"));
+            .thenThrow(new QuantityMeasurementException("Invalid conversion"));
             RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/quantity-measurement/litre/1/metre")
                                                                   .accept(MediaType.APPLICATION_JSON)
                                                                   .contentType(MediaType.APPLICATION_JSON);
