@@ -1,4 +1,69 @@
 package com.quantitymeasurement.controller;
 
+import com.google.gson.Gson;
+import com.quantitymeasurement.model.QuantityMeasurement;
+import com.quantitymeasurement.service.QuantityMeasurementService;
+import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import static com.quantitymeasurement.enumeration.Unit.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.util.AssertionErrors.assertEquals;
+
+@RunWith(SpringRunner.class)
+@WebMvcTest(QuantityMeasurementController.class)
 public class QuantityMeasurementControllerTest {
+
+    @Autowired
+    MockMvc mockMvc;
+
+    @MockBean
+    QuantityMeasurementService quantityMeasurementService;
+
+    @Autowired
+    Gson gson;
+
+    @Test
+    void given1000MillilitreToConvert_whenConvertedToMetre_shouldReturn1() {
+        try {
+            when(quantityMeasurementService.convertTo(any(QuantityMeasurement.class), any())).thenReturn(1.0);
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/quantity-measurement/METRE")
+                                                                  .accept(MediaType.APPLICATION_JSON)
+                                                                  .content(gson.toJson(new QuantityMeasurement(1000.0, MILLILITRE)))
+                                                                  .contentType(MediaType.APPLICATION_JSON);
+            MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+            assertEquals("fail",HttpStatus.OK.value(),result.getResponse().getStatus());
+            JSONAssert.assertEquals(gson.toJson(new QuantityMeasurement(1.0,METRE)),result.getResponse().getContentAsString(),false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void given1000MillilitreToConvert_whenConvertedToInvalidUnit_shouldReturnResults() {
+        try {
+            when(quantityMeasurementService.convertTo(any(QuantityMeasurement.class), any())).thenReturn(1.0);
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/quantity-measurement/metr")
+                                                                  .accept(MediaType.APPLICATION_JSON)
+                                                                  .content(gson.toJson(new QuantityMeasurement(1.0, MILLILITRE)))
+                                                                  .contentType(MediaType.APPLICATION_JSON);
+            mockMvc.perform(requestBuilder).andExpect(MockMvcResultMatchers.status().isBadRequest());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
