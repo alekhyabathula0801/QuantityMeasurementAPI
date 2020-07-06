@@ -1,6 +1,7 @@
 package com.quantitymeasurement.controller;
 
 import com.google.gson.Gson;
+import com.quantitymeasurement.exception.QuantityMeasurementException;
 import com.quantitymeasurement.model.QuantityMeasurement;
 import com.quantitymeasurement.service.QuantityMeasurementService;
 import org.junit.jupiter.api.Test;
@@ -37,12 +38,24 @@ public class QuantityMeasurementControllerTest {
     Gson gson;
 
     @Test
+    void givenUrlForGetRequest_whenInvalid_shouldReturnStatus() {
+        try {
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/quantity-measurement/litre")
+                                                                  .accept(MediaType.APPLICATION_JSON)
+                                                                  .contentType(MediaType.APPLICATION_JSON);
+            mockMvc.perform(requestBuilder)
+                   .andExpect(MockMvcResultMatchers.status().isNotFound());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
     void given1000MillilitreToConvert_whenConvertedToMetre_shouldReturn1() {
         try {
             when(quantityMeasurementService.convertTo(any(QuantityMeasurement.class), any())).thenReturn(1.0);
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/quantity-measurement/METRE")
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/quantity-measurement/millimetre/1000/METRE")
                                                                   .accept(MediaType.APPLICATION_JSON)
-                                                                  .content(gson.toJson(new QuantityMeasurement(1000.0, MILLILITRE)))
                                                                   .contentType(MediaType.APPLICATION_JSON);
             MvcResult result = mockMvc.perform(requestBuilder).andReturn();
             assertEquals("fail",HttpStatus.OK.value(),result.getResponse().getStatus());
@@ -56,11 +69,25 @@ public class QuantityMeasurementControllerTest {
     void given1000MillilitreToConvert_whenConvertedToInvalidUnit_shouldReturnResults() {
         try {
             when(quantityMeasurementService.convertTo(any(QuantityMeasurement.class), any())).thenReturn(1.0);
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/quantity-measurement/metr")
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/quantity-measurement/metr/1/metre")
                                                                   .accept(MediaType.APPLICATION_JSON)
-                                                                  .content(gson.toJson(new QuantityMeasurement(1.0, MILLILITRE)))
                                                                   .contentType(MediaType.APPLICATION_JSON);
             mockMvc.perform(requestBuilder).andExpect(MockMvcResultMatchers.status().isBadRequest());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void given1000MillilitreToConvert_whenConvertedToInvalidUnitLitre_shouldReturnResults() {
+        try {
+            when(quantityMeasurementService.convertTo(any(QuantityMeasurement.class), any()))
+                 .thenThrow(new QuantityMeasurementException("Invalid conversion"));
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/quantity-measurement/litre/1/metre")
+                                                                  .accept(MediaType.APPLICATION_JSON)
+                                                                  .contentType(MediaType.APPLICATION_JSON);
+            mockMvc.perform(requestBuilder)
+                   .andExpect(MockMvcResultMatchers.status().isBadRequest());
         } catch (Exception e) {
             e.printStackTrace();
         }

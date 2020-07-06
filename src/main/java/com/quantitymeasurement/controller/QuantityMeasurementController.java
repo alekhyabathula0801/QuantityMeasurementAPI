@@ -5,7 +5,6 @@ import com.quantitymeasurement.exception.QuantityMeasurementException;
 import com.quantitymeasurement.model.QuantityMeasurement;
 import com.quantitymeasurement.service.QuantityMeasurementService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,12 +15,18 @@ public class QuantityMeasurementController {
     @Autowired
     QuantityMeasurementService quantityMeasurementService;
 
-    @GetMapping("/quantity-measurement/{unit}")
-    public QuantityMeasurement getConvertedValue(@PathVariable("unit") String unit, QuantityMeasurement quantityMeasurement) {
+    @GetMapping("/quantity-measurement/{unitIn}/{value}/{unitOut}")
+    public QuantityMeasurement getConvertedValue(@PathVariable("unitIn") String unitIn,@PathVariable("value") Double value,
+                                                 @PathVariable("unitOut") String unitOut) {
         try {
-            return new QuantityMeasurement(quantityMeasurementService.convertTo(quantityMeasurement, Unit.valueOf(unit.toUpperCase())), Unit.valueOf(unit.toUpperCase()));
-        } catch (ConversionFailedException e) {
+            return new QuantityMeasurement(quantityMeasurementService.convertTo(new QuantityMeasurement(
+                                                                                value,Unit.valueOf(unitIn.toUpperCase())),
+                                                                                Unit.valueOf(unitOut.toUpperCase())),
+                                            Unit.valueOf(unitOut.toUpperCase()));
+        } catch (IllegalArgumentException e) {
             throw new QuantityMeasurementException("Invalid Unit");
+        } catch (QuantityMeasurementException e) {
+            throw new QuantityMeasurementException(unitOut + " cann't convert to "+ unitIn);
         }
     }
 
