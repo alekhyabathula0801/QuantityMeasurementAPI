@@ -6,13 +6,15 @@ import com.quantitymeasurement.exception.QuantityMeasurementException;
 import com.quantitymeasurement.model.QuantityMeasurement;
 import org.springframework.stereotype.Service;
 
+import static com.quantitymeasurement.enumeration.Measurement.TEMPERATURE;
+
 @Service
 public class QuantityMeasurementService {
 
     public Double convertTo(QuantityMeasurement quantityMeasurement, Unit unit) {
         if(quantityMeasurement.getUnit().getMeasurementType() != unit.getMeasurementType())
             throw new QuantityMeasurementException(quantityMeasurement.getUnit()+" cannot convert to "+unit);
-        if(unit.getMeasurementType() != "TEMPERATURE") {
+        if(unit.getMeasurementType() != TEMPERATURE) {
             Double baseUnitConvertedValue = quantityMeasurement.getUnit()
                                                                .getConvertedValue(quantityMeasurement.getValue(),
                                                                                   quantityMeasurement.getUnit());
