@@ -23,21 +23,19 @@ public class SwaggerConfiguration {
     public Docket productAPI() {
         return new Docket(DocumentationType.SWAGGER_2).select()
                                                       .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
-                                                      .paths(regex("/quantity-measurement.*"))
                                                       .build()
                                                       .apiInfo(metaInfo());
     }
 
     private ApiInfo metaInfo() {
-        ApiInfo apiInfo = new ApiInfo(
+        return new ApiInfo(
                 "Quantity Measurement API",
                 "Convert the given quantity to required unit",
                 "1.0", "urn:tos",
-                new Contact("","",""),
+                new Contact("Alekhya","","alekhya@gmail.com"),
                 "Apache 2.0",
                 "http://www.apache.org/licenses/LICENSE-2.0", new ArrayList<VendorExtension>()
         );
-        return apiInfo;
     }
 
 }

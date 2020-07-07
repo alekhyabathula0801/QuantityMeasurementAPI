@@ -45,7 +45,7 @@ public class QuantityMeasurementServiceTest {
             QuantityMeasurementService quantityMeasurementService = new QuantityMeasurementService();
             quantityMeasurementService.convertTo(new QuantityMeasurement(1.0, Unit.LITRE), Unit.YARD);
         } catch (QuantityMeasurementException e) {
-            assertEquals("Invalid conversion", e.getMessage());
+            assertEquals("LITRE cannot convert to YARD", e.getMessage());
         }
     }
 

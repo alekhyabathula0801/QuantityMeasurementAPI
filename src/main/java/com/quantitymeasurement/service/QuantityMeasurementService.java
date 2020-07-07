@@ -11,10 +11,11 @@ public class QuantityMeasurementService {
 
     public Double convertTo(QuantityMeasurement quantityMeasurement, Unit unit) {
         if(quantityMeasurement.getUnit().getMeasurementType() != unit.getMeasurementType())
-            throw new QuantityMeasurementException("Invalid conversion");
+            throw new QuantityMeasurementException(quantityMeasurement.getUnit()+" cannot convert to "+unit);
         if(unit.getMeasurementType() != "TEMPERATURE") {
-            Double baseUnitConvertedValue = quantityMeasurement.getUnit().getConvertedValue(quantityMeasurement.getValue(),
-                                                                                            quantityMeasurement.getUnit());
+            Double baseUnitConvertedValue = quantityMeasurement.getUnit()
+                                                               .getConvertedValue(quantityMeasurement.getValue(),
+                                                                                  quantityMeasurement.getUnit());
             return baseUnitConvertedValue/unit.getConversionValue();
         }
         double kelvinValue = quantityMeasurement.getUnit().getConvertedValue(quantityMeasurement.getValue(),
