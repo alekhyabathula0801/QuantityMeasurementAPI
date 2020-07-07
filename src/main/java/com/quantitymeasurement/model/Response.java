@@ -1,10 +1,7 @@
 package com.quantitymeasurement.model;
 
-import org.springframework.stereotype.Component;
-
 import java.time.LocalDateTime;
 
-@Component
 public class Response {
 
     private int status;

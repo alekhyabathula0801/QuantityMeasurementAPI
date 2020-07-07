@@ -1,10 +1,15 @@
 package com.quantitymeasurement.service;
 
+import com.quantitymeasurement.enumeration.Measurement;
 import com.quantitymeasurement.enumeration.TemperatureConversion;
 import com.quantitymeasurement.enumeration.Unit;
 import com.quantitymeasurement.exception.QuantityMeasurementException;
 import com.quantitymeasurement.model.QuantityMeasurement;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.quantitymeasurement.enumeration.Measurement.TEMPERATURE;
 
@@ -27,6 +32,12 @@ public class QuantityMeasurementService {
         if(unit.equals(Unit.CELCIUS))
             return TemperatureConversion.CELCIUS.getConvertedValue(kelvinValue);
         return kelvinValue;
+    }
+
+    public List<Unit> getUnits(Measurement measurementType) {
+        return Arrays.stream(Unit.values())
+                     .filter(measurement->measurement.getMeasurementType().equals(measurementType))
+                     .collect(Collectors.toList());
     }
 
 }
