@@ -1,6 +1,7 @@
 package com.quantitymeasurement.exception;
 
 import com.quantitymeasurement.model.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,9 @@ import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class QuantityMeasurementExceptionHandler {
+
+    @Autowired
+    Response response;
 
     @ExceptionHandler
     public ResponseEntity<Response> addException(QuantityMeasurementException e){
@@ -23,7 +27,7 @@ public class QuantityMeasurementExceptionHandler {
     }
 
     public ResponseEntity<Response> getResponseEntity(String message){
-        Response response = new Response(message);
+        response.setMessage(message);
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         response.setTimestamp(LocalDateTime.now());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);

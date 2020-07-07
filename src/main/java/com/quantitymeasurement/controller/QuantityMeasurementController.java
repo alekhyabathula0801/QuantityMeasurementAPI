@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
+
 @RestController
 public class QuantityMeasurementController {
 
@@ -18,10 +21,11 @@ public class QuantityMeasurementController {
 
     @ApiResponses(value = {@ApiResponse(code = 400,message = "Bad Request")})
 
-    @GetMapping("/quantity-measurement/{unit}/{value}/{requiredUnit}")
+    @GetMapping(value ="/quantity-measurement/{unit}/{value}/{requiredUnit}",
+               produces = {APPLICATION_JSON_VALUE,APPLICATION_XML_VALUE})
     public QuantityMeasurement getConvertedValue(@PathVariable("unit") Unit unit, @PathVariable("value") Double value,
                                                  @PathVariable("requiredUnit") Unit requiredUnit) {
-            return new QuantityMeasurement(quantityMeasurementService.convertTo(new QuantityMeasurement(value,unit),
+        return new QuantityMeasurement(quantityMeasurementService.convertTo(new QuantityMeasurement(value,unit),
                                                                                 requiredUnit),requiredUnit);
     }
 
