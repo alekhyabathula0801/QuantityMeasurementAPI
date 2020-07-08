@@ -5,8 +5,7 @@ import com.quantitymeasurement.enumeration.Unit;
 import com.quantitymeasurement.model.QuantityMeasurement;
 import com.quantitymeasurement.model.Response;
 import com.quantitymeasurement.service.QuantityMeasurementService;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +24,7 @@ public class QuantityMeasurementController {
     @Autowired
     QuantityMeasurementService quantityMeasurementService;
 
-    @ApiResponses(value = {@ApiResponse(code = 400,message = "Bad Request")})
+    @ApiOperation(value = "Get converted value of given quantity measure")
     @GetMapping("/quantity-measurement/{unit}/{value}/{requiredUnit}")
     public ResponseEntity<Response> getConvertedValue(@PathVariable("unit") Unit unit, @PathVariable("value") Double value,
                                                       @PathVariable("requiredUnit") Unit requiredUnit) {
@@ -34,12 +33,14 @@ public class QuantityMeasurementController {
     }
 
     @GetMapping("/quantity-measurement/{measurementType}")
+    @ApiOperation("View a list of available units of given measurement type")
     public ResponseEntity<Response> getUnits(@PathVariable("measurementType") Measurement measurementType) {
         List<Unit> units = quantityMeasurementService.getUnits(measurementType);
         return new ResponseEntity<>(new Response(units,SUCCESSFUL,200),HttpStatus.OK);
     }
 
     @GetMapping("/quantity-measurement")
+    @ApiOperation("View a list of available measurement types")
     public ResponseEntity<Response> getMeasurements() {
         List<Measurement> measurementTypes = quantityMeasurementService.getMeasurementTypes();
         return new ResponseEntity<>(new Response(measurementTypes,SUCCESSFUL,200),HttpStatus.OK);
