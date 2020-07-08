@@ -1,13 +1,13 @@
 package com.quantitymeasurement.controller;
 
 import com.google.gson.Gson;
+import com.quantitymeasurement.enumeration.Measurement;
 import com.quantitymeasurement.enumeration.Unit;
 import com.quantitymeasurement.exception.QuantityMeasurementException;
 import com.quantitymeasurement.model.QuantityMeasurement;
 import com.quantitymeasurement.service.QuantityMeasurementService;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -23,7 +23,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.quantitymeasurement.enumeration.Unit.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.util.AssertionErrors.assertEquals;
@@ -44,7 +43,7 @@ public class QuantityMeasurementControllerTest {
     @Test
     void givenUrlForGetRequest_whenInvalid_shouldReturnStatus() {
         try {
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/quantity-measurement/")
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/quantity-measurement/METRE/100")
                                                                   .accept(MediaType.APPLICATION_JSON)
                                                                   .contentType(MediaType.APPLICATION_JSON);
             mockMvc.perform(requestBuilder)
@@ -64,7 +63,6 @@ public class QuantityMeasurementControllerTest {
             MvcResult result = mockMvc.perform(requestBuilder)
                                       .andReturn();
             assertEquals("fail",HttpStatus.OK.value(),result.getResponse().getStatus());
-            JSONAssert.assertEquals(gson.toJson(new QuantityMeasurement(1.0,METRE)),result.getResponse().getContentAsString(),false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -89,7 +87,7 @@ public class QuantityMeasurementControllerTest {
         try {
             when(quantityMeasurementService.convertTo(any(QuantityMeasurement.class), any()))
                 .thenThrow(new QuantityMeasurementException("Invalid conversion"));
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/quantity-measurement/litre/1/metre")
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/quantity-measurement/LITRE/1/METRE")
                                                                   .accept(MediaType.APPLICATION_JSON)
                                                                   .contentType(MediaType.APPLICATION_JSON);
             mockMvc.perform(requestBuilder)
@@ -105,7 +103,7 @@ public class QuantityMeasurementControllerTest {
             List<Unit> expectedUnits = new ArrayList<>();
             expectedUnits.add(Unit.KELVIN);
             when(quantityMeasurementService.getUnits(any())).thenReturn(expectedUnits);
-            RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/quantity-measurement/temperature")
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/quantity-measurement/TEMPERATURE")
                                                                   .accept(MediaType.APPLICATION_JSON)
                                                                   .contentType(MediaType.APPLICATION_JSON);
             mockMvc.perform(requestBuilder)
@@ -126,6 +124,22 @@ public class QuantityMeasurementControllerTest {
                                                                   .contentType(MediaType.APPLICATION_JSON);
             mockMvc.perform(requestBuilder)
                    .andExpect(MockMvcResultMatchers.status().isBadRequest());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void givenUrlToGetListOfMeasurements_whenValid_shouldReturnStatusOk() {
+        try {
+            List<Measurement> measurements = new ArrayList<>();
+            measurements.add(Measurement.LENGTH);
+            when(quantityMeasurementService.getMeasurementTypes()).thenReturn(measurements);
+            RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/quantity-measurement")
+                                                                  .accept(MediaType.APPLICATION_JSON)
+                                                                  .contentType(MediaType.APPLICATION_JSON);
+            mockMvc.perform(requestBuilder)
+                   .andExpect(MockMvcResultMatchers.status().isOk());
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -40,4 +40,8 @@ public class QuantityMeasurementService {
                      .collect(Collectors.toList());
     }
 
+    public List<Measurement> getMeasurementTypes() {
+        return Arrays.stream(Measurement.values()).collect(Collectors.toList());
+    }
+
 }

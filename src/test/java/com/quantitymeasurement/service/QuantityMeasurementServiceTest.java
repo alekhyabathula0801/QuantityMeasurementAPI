@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.quantitymeasurement.enumeration.Measurement.LENGTH;
+import static com.quantitymeasurement.enumeration.Measurement.*;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -160,6 +160,17 @@ public class QuantityMeasurementServiceTest {
         expectedUnits.add(Unit.KILOMETRE);
         expectedUnits.add(Unit.MILLIMETRE);
         assertEquals(expectedUnits,units);
+    }
+
+    @Test
+    public void givenMeasurements_whenvalid_shouldReturnMeasurementTypes() {
+        List<Measurement> measurementTypes = quantityMeasurementService.getMeasurementTypes();
+        List<Measurement> expectedMeasurements = new ArrayList<>();
+        expectedMeasurements.add(LENGTH);
+        expectedMeasurements.add(VOLUME);
+        expectedMeasurements.add(MASS);
+        expectedMeasurements.add(TEMPERATURE);
+        assertEquals(expectedMeasurements,measurementTypes);
     }
 
 }
