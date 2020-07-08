@@ -1,5 +1,6 @@
 package com.quantitymeasurement.exception;
 
+import com.quantitymeasurement.enumeration.Message;
 import com.quantitymeasurement.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionFailedException;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.time.LocalDateTime;
 
+import static com.quantitymeasurement.enumeration.Message.INVALID_INPUT;
+
 @ControllerAdvice
 public class QuantityMeasurementExceptionHandler {
 
@@ -18,19 +21,18 @@ public class QuantityMeasurementExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<Response> addException(QuantityMeasurementException e){
-        return getResponseEntity(e.getMessage());
+        return getResponseEntity(e.exceptionType,e.status);
     }
 
     @ExceptionHandler(ConversionFailedException.class)
     public ResponseEntity<Response> addException(){
-        return getResponseEntity("Invalid Unit");
+        return getResponseEntity(INVALID_INPUT,HttpStatus.BAD_REQUEST);
     }
 
-    public ResponseEntity<Response> getResponseEntity(String message){
+    public ResponseEntity<Response> getResponseEntity(Message message,HttpStatus status){
         response.setMessage(message);
-        response.setStatus(HttpStatus.BAD_REQUEST.value());
-        response.setTimestamp(LocalDateTime.now());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        response.setStatus(status.value());
+        return new ResponseEntity<>(response, status);
     }
 
 }

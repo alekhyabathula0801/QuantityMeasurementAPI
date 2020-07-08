@@ -2,12 +2,15 @@ package com.quantitymeasurement.controller;
 
 import com.google.gson.Gson;
 import com.quantitymeasurement.enumeration.Measurement;
+import com.quantitymeasurement.enumeration.Message;
 import com.quantitymeasurement.enumeration.Unit;
 import com.quantitymeasurement.exception.QuantityMeasurementException;
 import com.quantitymeasurement.model.QuantityMeasurement;
+import com.quantitymeasurement.model.Response;
 import com.quantitymeasurement.service.QuantityMeasurementService;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -23,6 +26,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.quantitymeasurement.enumeration.Message.SUCCESSFUL;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.util.AssertionErrors.assertEquals;
@@ -63,6 +67,7 @@ public class QuantityMeasurementControllerTest {
             MvcResult result = mockMvc.perform(requestBuilder)
                                       .andReturn();
             assertEquals("fail",HttpStatus.OK.value(),result.getResponse().getStatus());
+            JSONAssert.assertEquals(gson.toJson(new Response(1.0, SUCCESSFUL,200)),result.getResponse().getContentAsString(),false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -86,7 +91,7 @@ public class QuantityMeasurementControllerTest {
     void given1000MillilitreToConvert_whenConvertedToInvalidUnitLitre_shouldReturnBadRequest() {
         try {
             when(quantityMeasurementService.convertTo(any(QuantityMeasurement.class), any()))
-                .thenThrow(new QuantityMeasurementException("Invalid conversion"));
+                .thenThrow(new QuantityMeasurementException("Invalid conversion", Message.INVALID_CONVERSION,HttpStatus.BAD_REQUEST));
             RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/quantity-measurement/LITRE/1/METRE")
                                                                   .accept(MediaType.APPLICATION_JSON)
                                                                   .contentType(MediaType.APPLICATION_JSON);

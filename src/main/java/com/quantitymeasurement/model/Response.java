@@ -1,27 +1,17 @@
 package com.quantitymeasurement.model;
 
-import java.time.LocalDateTime;
+import com.quantitymeasurement.enumeration.Message;
 
 public class Response {
 
     private int status;
-    private String message;
-    private LocalDateTime timestamp;
+    private Message message;
     private Object result;
 
-    public Response(Object result, String message, int status, LocalDateTime timestamp) {
+    public Response(Object result, Message message, int status) {
         this.result = result;
         this.message = message;
         this.status = status;
-        this.timestamp = timestamp;
-    }
-
-    public Object getResult() {
-        return result;
-    }
-
-    public void setResult(Object result) {
-        this.result = result;
     }
 
     public Response() {
@@ -35,20 +25,20 @@ public class Response {
         this.status = status;
     }
 
-    public String getMessage() {
+    public Message getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
+    public void setMessage(Message message) {
         this.message = message;
     }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
+    public Object getResult() {
+        return result;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
+    public void setResult(Object result) {
+        this.result = result;
     }
 
 }

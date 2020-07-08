@@ -1,10 +1,12 @@
 package com.quantitymeasurement.service;
 
 import com.quantitymeasurement.enumeration.Measurement;
+import com.quantitymeasurement.enumeration.Message;
 import com.quantitymeasurement.enumeration.TemperatureConversion;
 import com.quantitymeasurement.enumeration.Unit;
 import com.quantitymeasurement.exception.QuantityMeasurementException;
 import com.quantitymeasurement.model.QuantityMeasurement;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -18,7 +20,8 @@ public class QuantityMeasurementService {
 
     public Double convertTo(QuantityMeasurement quantityMeasurement, Unit unit) {
         if(quantityMeasurement.getUnit().getMeasurementType() != unit.getMeasurementType())
-            throw new QuantityMeasurementException(quantityMeasurement.getUnit()+" cannot convert to "+unit);
+            throw new QuantityMeasurementException(quantityMeasurement.getUnit()+" cannot convert to "+unit,
+                                                   Message.INVALID_CONVERSION, HttpStatus.BAD_REQUEST);
         if(unit.getMeasurementType() != TEMPERATURE) {
             Double baseUnitConvertedValue = quantityMeasurement.getUnit()
                                                                .getConvertedValue(quantityMeasurement.getValue(),
