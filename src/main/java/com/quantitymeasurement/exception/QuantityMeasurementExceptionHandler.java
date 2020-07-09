@@ -5,6 +5,7 @@ import com.quantitymeasurement.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -12,7 +13,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import static com.quantitymeasurement.enumeration.Message.INVALID_INPUT;
 import static com.quantitymeasurement.enumeration.Message.TRY_AGAIN_LATER;
 
-@RestControllerAdvice
+@ControllerAdvice
 public class QuantityMeasurementExceptionHandler {
 
     @Autowired
