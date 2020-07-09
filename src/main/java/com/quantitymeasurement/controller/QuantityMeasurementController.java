@@ -24,6 +24,13 @@ public class QuantityMeasurementController {
     @Autowired
     QuantityMeasurementService quantityMeasurementService;
 
+    /**
+     *
+     * @param unit  is given measurement unit
+     * @param value is given quantity
+     * @param requiredUnit is the unit to convert
+     * @return Response Entity with result and status
+     */
     @ApiOperation(value = "Get converted value of given quantity measure")
     @GetMapping("/quantity-measurement/{unit}/{value}/{requiredUnit}")
     public ResponseEntity<Response> getConvertedValue(@PathVariable("unit") Unit unit, @PathVariable("value") Double value,
@@ -32,6 +39,11 @@ public class QuantityMeasurementController {
         return new ResponseEntity<>(new Response(result, SUCCESSFUL, 200),HttpStatus.OK);
     }
 
+    /**
+     *
+     * @param measurementType is given Measurement
+     * @return Response Entity with list of available units of given Measurement type ans status
+     */
     @GetMapping("/quantity-measurement/{measurementType}")
     @ApiOperation("View a list of available units of given measurement type")
     public ResponseEntity<Response> getUnits(@PathVariable("measurementType") Measurement measurementType) {
@@ -39,6 +51,10 @@ public class QuantityMeasurementController {
         return new ResponseEntity<>(new Response(units,SUCCESSFUL,200),HttpStatus.OK);
     }
 
+    /**
+     *
+     * @return Response Entity with list of available measurement types and status
+     */
     @GetMapping("/quantity-measurement")
     @ApiOperation("View a list of available measurement types")
     public ResponseEntity<Response> getMeasurements() {

@@ -18,6 +18,12 @@ import static com.quantitymeasurement.enumeration.Measurement.TEMPERATURE;
 @Service
 public class QuantityMeasurementService {
 
+    /**
+     *
+     * @param quantityMeasurement contains quantity and unit
+     * @param unit is required unit to convert
+     * @return converted value of given quantity measurement
+     */
     public Double convertTo(QuantityMeasurement quantityMeasurement, Unit unit) {
         if(quantityMeasurement.getUnit().getMeasurementType() != unit.getMeasurementType())
             throw new QuantityMeasurementException(quantityMeasurement.getUnit()+" cannot convert to "+unit,
@@ -37,12 +43,21 @@ public class QuantityMeasurementService {
         return kelvinValue;
     }
 
+    /**
+     *
+     * @param measurementType
+     * @return list of available Units of given measurement type
+     */
     public List<Unit> getUnits(Measurement measurementType) {
         return Arrays.stream(Unit.values())
                      .filter(measurement->measurement.getMeasurementType().equals(measurementType))
                      .collect(Collectors.toList());
     }
 
+    /**
+     *
+     * @return list of available measurement
+     */
     public List<Measurement> getMeasurementTypes() {
         return Arrays.stream(Measurement.values()).collect(Collectors.toList());
     }

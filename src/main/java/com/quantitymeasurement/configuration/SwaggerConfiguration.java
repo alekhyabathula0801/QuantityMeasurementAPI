@@ -17,6 +17,10 @@ import java.util.ArrayList;
 @EnableSwagger2
 public class SwaggerConfiguration {
 
+    /**
+     *
+     * @return object of Docket with required information
+     */
     @Bean
     public Docket productAPI() {
         return new Docket(DocumentationType.SWAGGER_2).select()
@@ -25,6 +29,10 @@ public class SwaggerConfiguration {
                                                       .apiInfo(metaInfo());
     }
 
+    /**
+     *
+     * @return ApiInfo object with required information
+     */
     private ApiInfo metaInfo() {
         return new ApiInfo(
                 "Quantity Measurement API",

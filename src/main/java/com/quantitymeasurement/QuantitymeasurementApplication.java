@@ -12,6 +12,10 @@ public class QuantitymeasurementApplication {
         SpringApplication.run(QuantitymeasurementApplication.class, args);
     }
 
+    /**
+     *
+     * @return Response Object
+     */
     @Bean
     public Response getResponse() {
         return new Response();

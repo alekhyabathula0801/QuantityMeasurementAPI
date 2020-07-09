@@ -7,6 +7,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class EnumConverter implements Converter<String, Unit> {
 
+    /**
+     *
+     * @param unit
+     * @return converted string in Unit
+     */
     @Override
     public Unit convert(String unit) {
         return Unit.valueOf(unit.toUpperCase());
