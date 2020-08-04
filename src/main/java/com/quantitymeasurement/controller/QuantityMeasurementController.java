@@ -10,13 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.CrossOrigin;
 import java.util.List;
 
 import static com.quantitymeasurement.enumeration.Message.SUCCESSFUL;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping(produces = {APPLICATION_JSON_VALUE,APPLICATION_XML_VALUE})
 public class QuantityMeasurementController {

@@ -9,6 +9,7 @@ import com.quantitymeasurement.model.QuantityMeasurement;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,6 +19,7 @@ import static com.quantitymeasurement.enumeration.Measurement.TEMPERATURE;
 @Service
 public class QuantityMeasurementService {
 
+    DecimalFormat decimalFormat = new DecimalFormat("#.######");
     /**
      *
      * @param quantityMeasurement contains quantity and unit
@@ -32,15 +34,15 @@ public class QuantityMeasurementService {
             Double baseUnitConvertedValue = quantityMeasurement.getUnit()
                                                                .getConvertedValue(quantityMeasurement.getValue(),
                                                                                   quantityMeasurement.getUnit());
-            return baseUnitConvertedValue/unit.getConversionValue();
+            return Double.parseDouble(decimalFormat.format(baseUnitConvertedValue/unit.getConversionValue()));
         }
         double kelvinValue = quantityMeasurement.getUnit().getConvertedValue(quantityMeasurement.getValue(),
                                                                              quantityMeasurement.getUnit());
         if(unit.equals(Unit.FAHRENHEIT))
-            return TemperatureConversion.FAHRENHEIT.getConvertedValue(kelvinValue);
+            return Double.parseDouble(decimalFormat.format(TemperatureConversion.FAHRENHEIT.getConvertedValue(kelvinValue)));
         if(unit.equals(Unit.CELCIUS))
-            return TemperatureConversion.CELCIUS.getConvertedValue(kelvinValue);
-        return kelvinValue;
+            return Double.parseDouble(decimalFormat.format(TemperatureConversion.CELCIUS.getConvertedValue(kelvinValue)));
+        return Double.parseDouble(decimalFormat.format(kelvinValue));
     }
 
     /**
